@@ -20,4 +20,21 @@ for i in range(1,22,1):
     else:
         food_additive+=fetch_food_additive(html)
 
-print(food_additive)
+
+conn = pymysql.connect(host='localhost', user='root',
+                       password='1111',db='food_additive', charset='utf8'
+                       )
+
+try:
+    cur = conn.cursor()
+    for link in food_additive:
+        cur.execute('insert into food_additive values(''%s'',null,null)' %link) #execute 안에 쿼리문을 입력
+
+    #rows = cur.fetchall() # 전부 가져옴
+    #for data in rows:
+    #    print(data)
+
+finally:
+    cur.close()  #cur을 먼저 종료하고
+    conn.close() #conn을 종료
+
