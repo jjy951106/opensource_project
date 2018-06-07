@@ -10,6 +10,9 @@ except:
     driver = webdriver.Chrome('.\chromedriver')
 
 target_url='http://www.foodsafetykorea.go.kr/portal/safefoodlife/foodAditive/foodAdditiveBasisInfo.do?page_gubun=2&procs_cl=1&keyfield=adtv_nm&key=&page=%d'
+use=[]
+eng_name=[]
+name=[]
 
 for i in range(1,22,1):
     driver.get(target_url %i)
@@ -29,12 +32,16 @@ for i in range(1,22,1):
         lists=table_tag.find('tbody').get_text('/',strip=True).split('/')
 
         k=0
-        for list in lists:
-            if(k==1):
-                break
-            if(list=='주요용도'):
-                k=1
-
-        print(list)
+        for i in range(0,len(lists),1):
+            if(lists[i]=='주요용도'):
+                use+=lists[i+1]
+                print(lists[i+1])
+            if(lists[i]=='식품첨가물영문명'):
+                eng_name+=lists[i+1]
+                print(lists[i+1])
+            if(lists[i]=='식품첨가물명'):
+                name+=lists[i+1]
+                print(lists[i+1])
+        
 
         driver.back()
