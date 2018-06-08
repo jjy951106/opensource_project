@@ -12,11 +12,18 @@
         <th>제품명</th>
         <th>조회수</th>
       </tr>
+	  <%
+      for(var i = 0; i<hitArray.length; i++)
+      {
+      %>
       <tr>
-        <td>1</td>
-        <td>2</td>        
-        <td>3</td>        
+        <td><%=numberArray[i]%></td>
+        <td><%=nameArray[i]%></td>
+        <td><%=hitArray[i]%></td>
       </tr>
+	  <%
+      }
+      %>
     </table>
 	<table>
 		<tr>
