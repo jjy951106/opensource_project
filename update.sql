@@ -12,7 +12,11 @@ where _name='아스파탐';
 
 update food_additive
 set _10_dangerous_additive='10대 주의성분(간, 신장 손상 위험)'
-where _name='수크랄로스' or _name='아세설팜칼륨';
+where _name='수크랄로스';
+
+update food_additive
+set _10_dangerous_additive='10대 주의성분(간, 신장 손상 위험)'
+where _name='아세설팜칼륨';
 
 update food_additive
 set _10_dangerous_additive='10대 주의성분(인간 치사량이 찻숫가락 하나 양)'
