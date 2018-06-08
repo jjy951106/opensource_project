@@ -14,7 +14,9 @@ _use=[]
 _eng_name=[]
 _name=[]
 
-for i in range(1,22,1):
+c=0
+
+for i in range(1,22,1): # page 21 까지 존재
     driver.get(target_url %i)
     res=urllib.request.urlopen(target_url %i)
     html=res.read()
@@ -34,16 +36,20 @@ for i in range(1,22,1):
         k=0
         for i in range(0,len(lists),1):
             if(lists[i]=='주요용도'):
-                _use.append(lists[i+1])
+                if(lists[i+1]=='JECFA 평가'):
+                    _use.append('미표기')
+                else:
+                    _use.append(lists[i+1])
             if(lists[i]=='식품첨가물영문명'):
                 _eng_name.append(lists[i+1])
             if(lists[i]=='식품첨가물명'):
                 _name.append(lists[i+1])
-        
+        c+=1
+        print(c)
         driver.back()
         
 ##
-        
+c=0        
 _concern=[]
 
 for _eng in _eng_name:
@@ -66,12 +72,27 @@ for _eng in _eng_name:
     lists=tag.find_all('li')
 
     k=0
-    for list in lists:
+    if(len(lists)>1):
+        for list in lists:
+            change_search=_eng.replace(' ','').replace('-','').replace('δ','Delta')
             r=re.search(_eng, "%s" %list)
             if(r!=None):
                 link=re.search('href="(.*?)">','%s' %list).group(1)
                 k=1
+                break
+        if(k==0):
+            for list in lists:
+                change_search=_eng.replace(' ','').replace('-','').replace('δ','Delta').replace('α','Alpha').replace('β','Beta') #
+                r=re.search(change_search.upper(), "%s" %list)
+                if(r!=None):
+                    link=re.search('href="(.*?)">','%s' %list).group(1)
+                    k=1
+                    break
 
+    if(len(lists)==1):
+        link=re.search('href="(.*?)">','%s' %lists).group(1)
+        k=1
+        
     if(k==0):
         _concern.append('등급 미표기')
         continue
@@ -99,6 +120,8 @@ for _eng in _eng_name:
     else:
         value=re.search('<strong>(.*?)</strong>',"%s" %concern).group(1)
         _concern.append(value+' Concerns')
+    c+=1
+    print(c)
     
 ##
 
@@ -108,8 +131,8 @@ conn = pymysql.connect(host='localhost', user='root',
 
 try:
     cur = conn.cursor()
-    for i in range(0,613,1):
-        cur.execute('insert into food_additive values("%s","%s","%s")' %(_name[i],_use[i],_concern[i]))
+    for i in range(0,len(_name),1):
+        cur.execute('insert into food_additive values("%s","%s","%s",null,0)' %(_name[i],_use[i],_concern[i]))
         #execute 안에 쿼리문을 입력
 
 finally:
