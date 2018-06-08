@@ -8,3 +8,5 @@ CREATE TABLE project (
 );
 
 router 폴더의 main.js에서 connection을 자기 데이터베이스에 맞게 수정해주고 사용.
+
+실행은 server.js

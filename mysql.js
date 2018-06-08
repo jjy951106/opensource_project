@@ -10,8 +10,12 @@ var connection = mysql.createConnection({
 });
 
 var sql = 'SELECT * FROM nodejsconnect.project';
+connection.query(sql, function (err, rows) {
+	console.log(rows)
+});
 //var strArray = sql.split('.');
 //console.log(strArray[0]);
+/*
 var hitArray = new Array();
 var numberArray = new Array();
 var nameArray = new Array();
@@ -68,4 +72,4 @@ router.get('/', function(req, res, next) {
   });
 });
 */
-//module.exports = router;
+//module.exports = router;*/
