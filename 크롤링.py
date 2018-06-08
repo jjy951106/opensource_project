@@ -19,7 +19,7 @@ _name=[]    # 이름
 
 c=0         # 진행 여부를 확인하기 위해 설정한 변수
 
-for i in range(1,22,1): # page 21 까지 존재
+for i in range(14,22,1): # page 21 까지 존재 #1~14 
     driver.get(target_url %i)
     res=urllib.request.urlopen(target_url %i)
     html=res.read()
@@ -159,7 +159,7 @@ conn = pymysql.connect(host='localhost', user='root',
 try:
     cur = conn.cursor()
     for i in range(0,len(_name),1):
-        cur.execute('insert into food_additive values("%s","%s","%s","%s",null)' %(_name[i],_use[i],_concern[i],_attention[i]))
+        cur.execute('insert into food_additive values("%s","%s","%s","%s",null)' %(_name[i],_use[i],_concern[i],_attention[i].replace('"','')))
         
 
 finally:
