@@ -11,8 +11,11 @@
       <table border="2">
         <tr>
           <th>제품명</th>
-          <td><input type="text" name="title" id="title" required /></td>
+          <td><input type="text" name="title" id="title" required/></td>
         </tr>
+		<tr>
+		<td colspan="6"><img src="/img" width="200" height="200"></td>
+		</tr>
         <tr>
           <td colspan="2"><input type="submit" value="등록"></td>
         </tr>
@@ -21,38 +24,11 @@
   <script>
     function onWriteSubmit()
     {
-      if ( $("#writer").val().trim() == "" )
-      {
-        var message = "아이디를 입력해 주세요";
-        $("#writer").val("");
-        $("#writer").focus();
-        alert(message);
-        return false;
-      }
-
       if ( $("#title").val().trim() == "" )
       {
-        var message = "제목을 입력해 주세요";
+        var message = "제품명을 입력해 주세요";
         $("#title").val("");
         $("#title").focus();
-        alert(message);
-        return false;
-      }
-
-      if ( $("#content").val().trim() == "" )
-      {
-        var message = "본문 내용을 입력해 주세요";
-        $("#content").val("");
-        $("#content").focus();
-        alert(message);
-        return false;
-      }
-
-      if ( $("#password").val().trim() == "" )
-      {
-        var message = "패스워드를 입력해 주세요";
-        $("#password").val("");
-        $("#password").focus();
         alert(message);
         return false;
       }
