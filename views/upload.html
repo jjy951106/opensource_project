@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html">
+  <head>
+    <title>성분표 분석 - 업로드</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+  </head>
+  <body>
+    <h1>업로드</h1>
+    <form method="post" action="/upload" onsubmit="onWriteSubmit()">
+      <table border="2">
+        <tr>
+          <th>제품명</th>
+          <td><input type="text" name="title" id="title" required/></td>
+        </tr>
+		<tr>
+		<td colspan="6"><img src="/img" width="200" height="200"></td>
+		</tr>
+        <tr>
+          <td colspan="2"><input type="submit" value="등록"></td>
+        </tr>
+      </table>
+    </form>
+  <script>
+    function onWriteSubmit()
+    {
+      if ( $("#title").val().trim() == "" )
+      {
+        var message = "제품명을 입력해 주세요";
+        $("#title").val("");
+        $("#title").focus();
+        alert(message);
+        return false;
+      }
+    }
+  </script>
+  </body>
+</html>

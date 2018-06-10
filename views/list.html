@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>성분표 분석</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <h1>성분표 분석</h1>
+    <table border="2">
+      <tr>
+        <th>번호</th>
+        <th>제품명</th>
+        <th>조회수</th>
+      </tr>
+	  <%
+      for(var i = 0; i<hitArray.length; i++)
+      {
+      %>
+      <tr>
+        <td><%=numberArray[i]%></td>
+        <td><a href="/board/<%=numberArray[i]%>"><%=nameArray[i]%></a></td>
+        <td><%=hitArray[i]%></td>
+      </tr>
+	  <%
+      }
+      %>
+    </table>
+	<table>
+		<tr>
+			<td><a href="/write">성분 확인</a></td>
+		</tr>
+	</table>
+  </body>
+</html>
