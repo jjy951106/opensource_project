@@ -13,7 +13,7 @@ tesseract_path = 'C:\\Program Files (x86)\\Tesseract-OCR'
 pytesseract.pytesseract.tesseract_cmd = tesseract_path + '\\tesseract'
 
 conn = pymysql.connect(host='localhost', user='root',
-                       password='1234',db='food', charset='utf8')
+                       password='1234',db='food_additive', charset='utf8')
 cur = conn.cursor()
 
 conn2 = pymysql.connect(host='localhost', user='root',
