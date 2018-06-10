@@ -12,6 +12,10 @@ conn = pymysql.connect(host='localhost', user='root',
                        password='1234',db='food', charset='utf8')
 cur = conn.cursor()
 
+conn2 = pymysql.connect(host='localhost', user='root',
+                       password='1234',db='nodejsconnect', charset='utf8')
+cur2 = conn2.cursor()
+
 name_db = []
 search_db = []
 result = []
@@ -48,11 +52,11 @@ def ocr_tesseract(filename):
     
     for i in range(0, len(name_db), 1):
         if name_db[i] in text2:
-            result.append(name_db[i])
+            result.append(i)
 
     for i in range(0, len(search_db), 1):
         if str(search_db[i]) in text2:
-            result.append(search_db[i])
+            result.append(i)
             
     result = list(set(result))
 
@@ -62,9 +66,9 @@ def ocr_tesseract(filename):
 if __name__ == '__main__':
     ss = '_enhace'
     getName()
-    for i  in range(1, 14, 1):
-#    for i  in range(8, 9, 1):
-        print('-------------------- ' + str(i) + '번째 이미지 ----------------------')
+#    for i  in range(1, 14, 1):
+    for i  in range(8, 9, 1):
+        #print('-------------------- ' + str(i) + '번째 이미지 ----------------------')
         ocr_tesseract(str(i))
         ocr_tesseract(str(i) + '_Binary')
         ocr_tesseract(str(i) + '_Guassian')
@@ -82,9 +86,22 @@ if __name__ == '__main__':
         ocr_tesseract(str(i) + '_Gray' + ss)
         ocr_tesseract(str(i) + '_Canny' + ss)
 
+        data = ""
+        
         for x in result:
-            cur.execute("select * from food_additive where _name='%s'" %x)
+            cur.execute("select * from food_additive where _name='%s'" %name_db[x])
             rows = cur.fetchall() # 전부 가져옴
-            for data in rows:
-                print(data)
+            data += str(rows).replace("'","").replace("((","").replace("),)","")
+            data += '/'
+        print(data)
+        print("update photopath set context2 = '%s' where path = '%s'" %(data, str(8)))
+        cur2.execute("update photopath set context = '%s' where path = '%s'" %(data, str(8)))
+            #for data in rows:
+                #print(data)
+        conn2.commit() # 작업을 db로 넘기는 명령.
+        cur2.close()  #cur을 먼저 종료하고
+        conn2.close() #conn을 종료
+        cur.close()  #cur을 먼저 종료하고
+        conn.close() #conn을 종료
+
         result = []
