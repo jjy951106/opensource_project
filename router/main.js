@@ -4,8 +4,7 @@ var upload = multer({ dest: './picture/' })
 var fs = require('fs');
 var path;
 var bodyParser = require('body-parser');
-
-
+var py_Shell = require('python-shell');
 
 var connection = mysql.createConnection({
     host     : 'localhost',
@@ -72,7 +71,7 @@ module.exports = function(app)
 				//console.log(rows);
 				var pathArray = JSON.stringify(rows).split(':"');
 				var realPath = pathArray[1].substring(0,pathArray[1].indexOf("\""));
-				//console.log(realPath);
+				console.log(realPath);
 				fs.readFile(realPath,function(err,data){
 				res.writeHead(200,{'Content-Type':'text/html'});
 				res.end(data);
@@ -90,7 +89,22 @@ module.exports = function(app)
 			var readArray = JSON.stringify(rows).split('":');
 			var sName = readArray[2].substring(1,readArray[2].indexOf("\","));
 			var hit =  readArray[3].substring(0,readArray[3].indexOf("}"));
-			res.render('read.html',{id,sName,hit})
+			connection.query('SELECT context2 FROM nodejsconnect.photopath WHERE id = '+id,function(err,context2){
+					var realContext = JSON.stringify(context2).split(':');
+					console.log(realContext[0]);
+					console.log(realContext[1]);
+					console.log(realContext[2]);
+					var realContext2 = realContext[1].substring(1,realContext[1].lastIndexOf("/"));
+					var realContext3 = JSON.stringify(realContext2).split('/');
+					var RC1 = realContext3[0];
+					var RC2 = realContext3[1];
+					var RC3 = realContext3[2];
+					var RC4 = realContext3[3];
+					var RC5 = realContext3[4];
+					console.log(realContext2)
+					
+				res.render('read.html',{id,sName,hit,RC1,RC2,RC3,RC4,RC5})
+			});
 		});
 	});
 	
@@ -126,7 +140,10 @@ module.exports = function(app)
 	//업로드 누르기전에 이미 DB에 올라감 여기서 업로드 안하고 나가리되면 DB 꼬이기 시작할거임.
 	app.post('/result', upload.single('filetoupload'), function(req,res){
 		//파일위치 저장
-		path = req.file.path;
+		console.log(req.file);
+		path = req.file.path + ".jpg";
+		console.log(path);
+		fs.rename(req.file.path,path);
 		var id;
 		//MAX_VALUE 서치해서 + 1
 		connection.query('SELECT MAX(id) FROM nodejsconnect.photopath',function(err,rows){
@@ -136,8 +153,17 @@ module.exports = function(app)
 			if (id == "null")
 				id = 0;
 			id = parseInt(id) + 1;
-			//console.log(id);
-			connection.query('INSERT into nodejsconnect.photopath(id,path) values(?,?)',[id,path],function (err) {
+
+			
+			var options = {
+				mode: 'text',
+				pythonPath: "",
+				pythonOptions: ['-u'],
+				scriptPath: '',
+				args: [id,path]
+			};
+			
+			connection.query('INSERT into nodejsconnect.photopath(id,path,context2) values(?,?,?)',[id,path,'1'],function (err) {
 				if(err) {
 					console.log(err);
 					connection.rollback(function () {
@@ -148,10 +174,19 @@ module.exports = function(app)
 				if(err) console.log(err);
 				});
 			});
-		});
-		//console.log(id);
-		
-		res.render('result.html')
+			var py_num = 0;
+			py_Shell.run("Opensource_Project.py", options, function(err, results){
+				while (1){					
+					if(results[0] == 1){
+						py_num = 1;
+						if(py_num == 1){						
+								res.render('result.html');
+						}
+						break;
+					}
+				}
+			});
+		});		
 	});
 	
 	// 업로드한 이미지 보기 (올리기 전)
